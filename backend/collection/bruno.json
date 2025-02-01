@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "Gazin Tech Collection",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}
