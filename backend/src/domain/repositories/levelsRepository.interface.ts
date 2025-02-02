@@ -1,6 +1,5 @@
 import { Levels } from '../models/levels.model';
 import { Prisma } from '@prisma/client';
-import { NotFoundException } from '@nestjs/common';
 
 export interface ILevelsRepository {
   getAll(): Promise<Levels[] | null>;
