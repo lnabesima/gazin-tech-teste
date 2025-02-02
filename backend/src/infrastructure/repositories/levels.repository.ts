@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Levels } from 'src/domain/models/levels.model';
 import { ILevelsRepository } from '../../domain/repositories/levelsRepository.interface';
 import { PrismaService } from '../prisma/prisma.service';
@@ -12,10 +12,15 @@ export class LevelsRepository implements ILevelsRepository {
     return await this.prisma.levels.findMany();
   }
 
-  async getById(id: number): Promise<Levels | null> {
-    return await this.prisma.levels.findUnique({
+  async getById(id: number): Promise<Levels> {
+    const level =  await this.prisma.levels.findUnique({
       where: { id }
     })
+
+    if (!level){
+      return new NotFoundException('Level not found.')
+    }
+    return level;
   }
 
   async create(levelData: Prisma.LevelsCreateInput): Promise<Levels> {
@@ -25,22 +30,22 @@ export class LevelsRepository implements ILevelsRepository {
       })
     } catch (error) {
       if(error instanceof Prisma.PrismaClientKnownRequestError){
+        //TODO: write specific error handlers
         if (error.code === 'P2002'){
           throw new Error('A record with the given unique fields already exists.');
         }
       }
-      //TODO: write specific error handlers
       throw error;
     }
   }
 
-  async update(id: number, levelData: Prisma.LevelsUpdateInput): Promise<Levels | null> {
+  async update(id: number, levelData: Prisma.LevelsUpdateInput): Promise<Levels> {
     const level = await this.prisma.levels.findUnique({
       where: { id }
     })
 
     if (!level){
-      return null
+      return new NotFoundException('Level not found.')
     }
 
     return await this.prisma.levels.update({
@@ -51,7 +56,7 @@ export class LevelsRepository implements ILevelsRepository {
     })
   }
 
-  async delete(id: number): Promise<number | null> {
+  async delete(id: number): Promise<number | NotFoundException> {
     try {
       await this.prisma.levels.delete({
         where: { id },
@@ -60,7 +65,7 @@ export class LevelsRepository implements ILevelsRepository {
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError)
         if (error.code === 'P2025') {
-        return null;
+          return new NotFoundException('Level not found.')
       }
       throw error;
     }
