@@ -3,7 +3,7 @@ export class Developer{
     public id: number,
     public nivelId: number,
     public nome: string,
-    public sexo: 'H' | 'M',
+    public sexo: 'M' | 'F',
     public dataNascimento: Date,
     public hobby: string
   ) {}

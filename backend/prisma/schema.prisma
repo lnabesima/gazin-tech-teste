@@ -15,11 +15,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Sexo {
+  M
+  F
+}
+
 model Developer {
   id             Int      @id @default(autoincrement())
   nivelId        Int
   nome           String
-  sexo           String
+  sexo           Sexo
   dataNascimento DateTime
   hobby          String
   nivel          Levels   @relation(fields: [nivelId], references: [id])
