@@ -3,9 +3,9 @@ import { Prisma } from '@prisma/client';
 import { NotFoundException } from '@nestjs/common';
 
 export interface ILevelsRepository {
-  getAll(): Promise<Levels[]>;
-  getById(id: number): Promise<Levels>;
+  getAll(): Promise<Levels[] | null>;
+  getById(id: number): Promise<Levels | null>;
   create(levelData: Prisma.LevelsCreateInput): Promise<Levels>;
   update(id: number, levelData: Partial<Levels>): Promise<Levels>;
-  delete(id: number): Promise<number | NotFoundException>;
+  delete(id: number): Promise<Levels>;
 }
