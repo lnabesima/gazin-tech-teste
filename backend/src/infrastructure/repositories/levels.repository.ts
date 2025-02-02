@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Levels } from 'src/domain/models/levels.model';
-import { ILevelsRepository } from '../../domain/repositories/levels.interface';
+import { ILevelsRepository } from '../../domain/repositories/levelsRepository.interface';
 import { PrismaService } from '../prisma/prisma.service';
 import { Prisma } from '@prisma/client';
 
