@@ -1,54 +1,57 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get, HttpCode,
+  HttpException, HttpStatus,
+  Inject,
+  Param, ParseIntPipe,
+  Post,
+  Put,
+} from '@nestjs/common';
+import { ILevelsService } from '../domain/interfaces/levels.interface';
+import { UpdateLevelDto } from '../application/dtos/updateLevel.dto';
 
 @Controller('levels')
 export class LevelsController {
+  constructor(
+    @Inject('ILevelsService')
+    private readonly levelsService: ILevelsService) {}
 
   @Get()
-  getLevels() {
-    // TODO: return 404 if there's no registered level
-    return [
-      { id: 1, nivel: 'Nível 1' },
-      { id: 2, nivel: 'Nível 2' },
-      { id: 3, nivel: 'Nível 3' },
-      { id: 4, nivel: 'Nível 4' },
-    ];
+  async getLevels() {
+    return await this.levelsService.getAllLevels();
   };
 
-  @Get(":id")
-  getLevelById(@Param("id") id: string) {
-    // TODO: return 404 if there's no such id
-    const foundLevel: string = `Nivel ${id}`
-    return {
-      nivel: foundLevel
-    };
+  @Get(':id')
+  async getLevelById(@Param('id', new ParseIntPipe()) id: number,) {
+    return await this.levelsService.getLevelById(id);
   }
 
   @Post()
-  createLevel(@Body() nivel: string) {
-    // TODO: return 400 if there's no `nivel` param or it is malformed
-    // TODO: return 500 if there's some error processing the data
-    return nivel;
+  @HttpCode(201) //to ensure that code 201 is sent instead of 200
+  async createLevel(@Body() bodyRequest: UpdateLevelDto) {
+    const { nivel } = bodyRequest;
+
+    return await this.levelsService.createLevel({
+      nivel,
+    });
   }
 
-  @Put(":id")
-  updateLevel(@Param("id") id: string, @Body() nivel: string) {
-    // TODO: return 404 if there's no such id
-    // TODO: return 400 if there's no `nivel` param or it is malformed
-    // TODO: return 500 if there's some error processing the data
-    // find the level by ID
-    // then update it with the `nivel` param
-    // finally update it on the db
-    const updatedLevel:string = nivel
-    return updatedLevel
+  @Put(':id')
+  async updateLevel(
+    @Param('id', new ParseIntPipe()) id: number,
+    @Body() bodyRequest: UpdateLevelDto) {
+    const { nivel } = bodyRequest;
+
+    return await this.levelsService.updateLevel(id, {
+      nivel,
+    });
   }
 
-  @Delete(":id")
-  deleteLevel(@Param("id") id: string){
-    // TODO: return 404 if there's no such id
-    // TODO: return 400 if there's devs with that level (can't delete what's being used)
-    const deletedLevel:string = `Nivel ${id}`
-    return{
-      nivel: deletedLevel
-    }
+  @Delete(':id')
+  @HttpCode(204)
+  async deleteLevel(@Param('id', new ParseIntPipe()) id: number,) {
+    return await this.levelsService.deleteLevel(id);
   }
 }
