@@ -19,6 +19,7 @@ export function handleError(error: unknown, type: string): never {
   }
 
   if (error instanceof PrismaClientValidationError) {
+    console.error('Validation error: ', error.message);
     throw new HttpException('Some parameters are either invalid or missing.',
       HttpStatus.BAD_REQUEST);
   }

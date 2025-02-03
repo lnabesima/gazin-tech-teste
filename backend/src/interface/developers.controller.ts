@@ -1,23 +1,48 @@
-import { Controller, Delete, Get, Patch, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get, HttpCode,
+  Inject,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Put,
+} from '@nestjs/common';
+import { IDevelopersService } from '../domain/interfaces/developers.interface';
+import { CreateDeveloperDto } from '../application/dtos/createDeveloper.dto';
 
 @Controller('developers')
-export class DevelopersController {
+export class DevelopersController  {
+  constructor(
+    @Inject('IDevelopersService')
+    private readonly developersService: IDevelopersService,
+  ) {}
+  @Post()
+  @HttpCode(201)
+  async registerDeveloper(@Body() bodyRequest: CreateDeveloperDto) {
+    return await this.developersService.registerDeveloper(bodyRequest);
+  }
 
   @Get()
-  getDevelopers(){}
+  async getDevelopers() {
+    return await this.developersService.getDevelopers()
+  }
 
   @Get(':id')
-  getDeveloperById(){}
-
-  @Post()
-  registerDeveloper(){}
+  async getDeveloperById(
+    @Param('id', new ParseIntPipe()) id: number
+  ) {
+    return await this.developersService.getDeveloperById(id);
+  }
 
   @Patch(':id')
-  updateDeveloper(){}
+  editDeveloper() {}
 
   @Put(':id')
-  editDeveloper(){}
+  updateDeveloper() {}
 
   @Delete(':id')
-  deleteDeveloper(){}
+  deleteDeveloper() {}
 }
