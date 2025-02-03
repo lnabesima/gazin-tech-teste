@@ -25,7 +25,7 @@ model Developer {
   nivelId        Int
   nome           String
   sexo           Sexo
-  dataNascimento DateTime
+  dataNascimento DateTime @db.Date()
   hobby          String
   nivel          Levels   @relation(fields: [nivelId], references: [id])
 
