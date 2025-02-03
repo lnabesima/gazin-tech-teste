@@ -6,5 +6,5 @@ export interface ILevelsService {
   getLevelById(id: number): Promise<Levels | null>;
   createLevel(levelData: Prisma.LevelsCreateInput): Promise<Levels>;
   updateLevel(id: number, levelData: Prisma.LevelsUpdateInput): Promise<Levels | null>;
-  deleteLevel(id: number): Promise<Levels>;
+  deleteLevel(id: string): Promise<void>;
 }

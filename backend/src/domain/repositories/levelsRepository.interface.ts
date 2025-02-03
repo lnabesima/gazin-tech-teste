@@ -7,4 +7,5 @@ export interface ILevelsRepository {
   create(levelData: Prisma.LevelsCreateInput): Promise<Levels>;
   update(id: number, levelData: Partial<Levels>): Promise<Levels>;
   delete(id: number): Promise<Levels>;
+  checkIfLevelHasDevs(id: number): Promise<boolean>;
 }

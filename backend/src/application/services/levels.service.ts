@@ -1,8 +1,12 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { ILevelsService } from 'src/domain/interfaces/levels.interface';
 import { Levels } from 'src/domain/models/levels.model';
 import { ILevelsRepository } from '../../domain/repositories/levelsRepository.interface';
+import {
+  PrismaClientKnownRequestError,
+  PrismaClientValidationError,
+} from '@prisma/client/runtime/library';
 
 @Injectable()
 export class LevelsService implements ILevelsService {
@@ -52,7 +56,7 @@ export class LevelsService implements ILevelsService {
   async createLevel(levelData: Prisma.LevelsCreateInput): Promise<Levels> {
     try {
       return await this.levelsRepository.create(levelData);
-    } catch (e){
+    } catch (e) {
       throw e;
     }
   }
@@ -61,15 +65,45 @@ export class LevelsService implements ILevelsService {
     try {
       return await this.levelsRepository.update(id, levelData);
     } catch (e) {
-      throw e
+      throw e;
     }
   }
 
-  async deleteLevel(id: number): Promise<Levels> {
+  async deleteLevel(id: string): Promise<void> {
+    const numberId = Number(id);
+    if (isNaN(numberId) || numberId <= 0) {
+      throw new HttpException('Invalid level ID.', HttpStatus.BAD_REQUEST);
+    }
+
     try {
-      return await this.levelsRepository.delete(id);
+      const levelHasDevs = await this.levelsRepository.checkIfLevelHasDevs(numberId);
+
+      if (levelHasDevs) {
+        //TODO: Create a custom exception
+        throw new HttpException('Cannot delete level with associated developers.', HttpStatus.BAD_REQUEST);
+      }
+
+      await this.levelsRepository.delete(numberId);
     } catch (e) {
-      throw e
+      //TODO: Create a utility function to extract handling
+      if (e instanceof HttpException && e.getStatus() === 400) {
+        throw e //this is too hacky, but will have to do for now
+      }
+
+      if (e instanceof PrismaClientKnownRequestError) {
+        if (e.code === 'P2025') { //this means not found
+          throw new HttpException('Level not found.', HttpStatus.NOT_FOUND);
+        }
+      }
+
+      if (e instanceof PrismaClientValidationError) {
+        throw new HttpException('Some parameters are either invalid or missing.',
+          HttpStatus.BAD_REQUEST);
+      }
+
+      //TODO: implement a logger method here
+      console.error("Unexpected error: ", e)
+      throw new HttpException('Unexpected error.', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }
