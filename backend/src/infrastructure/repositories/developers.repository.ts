@@ -19,9 +19,14 @@ export class DevelopersRepository implements IDevelopersRepository {
     });
   }
 
-  async create(developerData: Prisma.DeveloperCreateInput): Promise<Developer> {
+  async create(developerData: Prisma.DeveloperUncheckedCreateInput): Promise<Developer> {
     return this.prisma.developer.create({
-      data: developerData,
+      data: {
+        ...developerData
+      },
+      include: {
+        nivel: true
+      }
     });
   }
 
