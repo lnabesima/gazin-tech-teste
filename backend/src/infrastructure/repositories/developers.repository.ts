@@ -16,9 +16,12 @@ export class DevelopersRepository implements IDevelopersRepository {
     return this.prisma.developer.findMany();
   }
 
-  async getById(id: number): Promise<Developer | null> {
+  async getById(id: number): Promise<DeveloperRepositoryToServiceDto | null> {
     return this.prisma.developer.findUnique({
       where: { id },
+      include: {
+        nivel: true
+      }
     });
   }
 

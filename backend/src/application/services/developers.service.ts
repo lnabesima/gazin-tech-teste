@@ -1,13 +1,14 @@
 import { Developer } from '@prisma/client';
 import { IDevelopersService } from '../../domain/interfaces/developers.interface';
 import { CreateDeveloperDto } from '../dtos/createDeveloper.dto';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { handleError } from '../../shared/handleError';
 import { IDevelopersRepository } from '../../domain/repositories/developersRepository.interface';
 import { DeveloperDto } from '../dtos/developer.dto';
 import {
   RepositoryToServiceDeveloperMapper,
 } from '../dtos/mapper/repositoryToServiceDeveloper.mapper';
+import { DeveloperRepositoryToServiceDto } from '../dtos/developerRepositoryToService.dto';
 
 @Injectable()
 export class DevelopersService implements IDevelopersService {
@@ -35,8 +36,19 @@ export class DevelopersService implements IDevelopersService {
     }
   }
 
-  getDeveloperById(id: number): Promise<Developer> {
-    throw new Error('Method not implemented.');
+  async getDeveloperById(id: number): Promise<DeveloperDto> {
+    try {
+      const developer = await this.developersRepository.getById(id);
+
+      if (developer === null) {
+        throw new NotFoundException("There was no entries with that id.")
+      }
+
+        return RepositoryToServiceDeveloperMapper.toDeveloperDto(developer);
+
+    } catch(error){
+      handleError(error, 'developer');
+    }
   }
 
   editDeveloper(id: number, developer: Developer): Promise<Developer> {
