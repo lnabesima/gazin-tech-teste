@@ -1,10 +1,14 @@
 export class Developer{
   constructor(
-    public id: number,
-    public nivelId: number,
-    public nome: string,
-    public sexo: 'M' | 'F',
-    public dataNascimento: Date,
-    public hobby: string
+    id: number,
+    nome: string,
+    sexo: 'M' | 'F',
+  dataNascimento: Date,
+    idade: number,
+    hobby: string,
+    nivel: {
+      id: number;
+      nivel: string;
+    }
   ) {}
 }
