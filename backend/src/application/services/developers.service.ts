@@ -7,7 +7,7 @@ import { IDevelopersRepository } from '../../domain/repositories/developersRepos
 import { DeveloperDto } from '../dtos/developer.dto';
 import {
   RepositoryToServiceDeveloperMapper,
-} from '../dtos/mapper/repositoryToServiceDeveloper.mapper';
+} from '../mapper/repositoryToServiceDeveloper.mapper';
 import { DeveloperRepositoryToServiceDto } from '../dtos/developerRepositoryToService.dto';
 
 @Injectable()
