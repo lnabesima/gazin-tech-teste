@@ -1,21 +1,15 @@
 meta {
-  name: Update level
+  name: Get individual level
   type: http
   seq: 3
 }
 
-put {
+get {
   url: http://localhost:3000/api/v1/levels/:id
-  body: json
+  body: none
   auth: none
 }
 
 params:path {
   id: 4
-}
-
-body:json {
-  {
-    "nivel": "Junior 2"
-  }
 }

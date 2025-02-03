@@ -1,15 +1,21 @@
 meta {
-  name: Delete Level
+  name: Update level
   type: http
-  seq: 6
+  seq: 2
 }
 
-delete {
+put {
   url: http://localhost:3000/api/v1/levels/:id
-  body: none
+  body: json
   auth: none
 }
 
 params:path {
-  id: 8
+  id: 9
+}
+
+body:json {
+  {
+    
+  }
 }

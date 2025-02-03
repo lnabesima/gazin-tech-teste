@@ -1,15 +1,15 @@
 meta {
-  name: Get individual level
+  name: Delete Level
   type: http
-  seq: 4
+  seq: 5
 }
 
-get {
+delete {
   url: http://localhost:3000/api/v1/levels/:id
   body: none
   auth: none
 }
 
 params:path {
-  id: 4
+  id: 1
 }
