@@ -2,7 +2,8 @@ import {
   Body,
   Controller,
   Delete,
-  Get, HttpCode,
+  Get,
+  HttpCode,
   Inject,
   Param,
   ParseIntPipe,
@@ -12,6 +13,7 @@ import {
 } from '@nestjs/common';
 import { IDevelopersService } from '../domain/interfaces/developers.interface';
 import { CreateDeveloperDto } from '../application/dtos/createDeveloper.dto';
+import { DeveloperDto } from '../application/dtos/developer.dto';
 
 @Controller('developers')
 export class DevelopersController  {
@@ -21,8 +23,8 @@ export class DevelopersController  {
   ) {}
   @Post()
   @HttpCode(201)
-  async registerDeveloper(@Body() bodyRequest: CreateDeveloperDto) {
-    return await this.developersService.registerDeveloper(bodyRequest);
+  async registerDeveloper(@Body() bodyRequest: CreateDeveloperDto) : Promise<DeveloperDto> {
+    return await this.developersService.registerDeveloper(bodyRequest)
   }
 
   @Get()

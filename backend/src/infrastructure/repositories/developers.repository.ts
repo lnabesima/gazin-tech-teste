@@ -2,6 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { IDevelopersRepository } from '../../domain/repositories/developersRepository.interface';
 import { PrismaService } from '../prisma/prisma.service';
 import { Prisma, Developer } from '@prisma/client';
+import {
+  DeveloperRepositoryToServiceDto
+} from '../../application/dtos/developerRepositoryToService.dto';
 
 @Injectable()
 export class DevelopersRepository implements IDevelopersRepository {
@@ -19,7 +22,7 @@ export class DevelopersRepository implements IDevelopersRepository {
     });
   }
 
-  async create(developerData: Prisma.DeveloperUncheckedCreateInput): Promise<Developer> {
+  async create(developerData: Prisma.DeveloperUncheckedCreateInput): Promise<DeveloperRepositoryToServiceDto> {
     return this.prisma.developer.create({
       data: {
         ...developerData
