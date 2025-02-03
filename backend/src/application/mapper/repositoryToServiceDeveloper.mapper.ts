@@ -1,9 +1,9 @@
 import { DeveloperDto } from "../dtos/developer.dto";
-import { DeveloperRepositoryToServiceDto } from '../dtos/developerRepositoryToService.dto';
+import { RepositoryToServiceDeveloperDto } from '../dtos/repositoryToServiceDeveloper.dto';
 import { calculateAge } from '../../shared/helpers/calculateAge';
 
 export class RepositoryToServiceDeveloperMapper{
-  static toDeveloperDto(repositoryDto: DeveloperRepositoryToServiceDto):DeveloperDto{
+  static toDeveloperDto(repositoryDto: RepositoryToServiceDeveloperDto):DeveloperDto{
     const developerDto = new DeveloperDto();
 
     developerDto.id = repositoryDto.id;

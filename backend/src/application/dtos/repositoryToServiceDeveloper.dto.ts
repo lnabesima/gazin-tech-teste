@@ -1,4 +1,4 @@
-export class DeveloperRepositoryToServiceDto {
+export class RepositoryToServiceDeveloperDto {
   id: number;
   nome: string;
   sexo: 'M' | 'F';

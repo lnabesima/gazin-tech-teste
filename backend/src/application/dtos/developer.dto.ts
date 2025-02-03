@@ -1,6 +1,6 @@
-import { DeveloperRepositoryToServiceDto } from './developerRepositoryToService.dto';
+import { RepositoryToServiceDeveloperDto } from './repositoryToServiceDeveloper.dto';
 
-export class DeveloperDto extends DeveloperRepositoryToServiceDto{
+export class DeveloperDto extends RepositoryToServiceDeveloperDto{
   data_nascimento: string;
   idade: number;
 

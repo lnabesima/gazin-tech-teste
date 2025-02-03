@@ -3,8 +3,8 @@ import { IDevelopersRepository } from '../../domain/repositories/developersRepos
 import { PrismaService } from '../prisma/prisma.service';
 import { Prisma, Developer } from '@prisma/client';
 import {
-  DeveloperRepositoryToServiceDto
-} from '../../application/dtos/developerRepositoryToService.dto';
+  RepositoryToServiceDeveloperDto
+} from '../../application/dtos/repositoryToServiceDeveloper.dto';
 
 @Injectable()
 export class DevelopersRepository implements IDevelopersRepository {
@@ -16,7 +16,7 @@ export class DevelopersRepository implements IDevelopersRepository {
     return this.prisma.developer.findMany();
   }
 
-  async getById(id: number): Promise<DeveloperRepositoryToServiceDto | null> {
+  async getById(id: number): Promise<RepositoryToServiceDeveloperDto | null> {
     return this.prisma.developer.findUnique({
       where: { id },
       include: {
@@ -25,7 +25,7 @@ export class DevelopersRepository implements IDevelopersRepository {
     });
   }
 
-  async create(developerData: Prisma.DeveloperUncheckedCreateInput): Promise<DeveloperRepositoryToServiceDto> {
+  async create(developerData: Prisma.DeveloperUncheckedCreateInput): Promise<RepositoryToServiceDeveloperDto> {
     return this.prisma.developer.create({
       data: {
         ...developerData

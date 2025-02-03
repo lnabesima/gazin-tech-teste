@@ -8,7 +8,7 @@ import { DeveloperDto } from '../dtos/developer.dto';
 import {
   RepositoryToServiceDeveloperMapper,
 } from '../mapper/repositoryToServiceDeveloper.mapper';
-import { DeveloperRepositoryToServiceDto } from '../dtos/developerRepositoryToService.dto';
+import { RepositoryToServiceDeveloperDto } from '../dtos/repositoryToServiceDeveloper.dto';
 
 @Injectable()
 export class DevelopersService implements IDevelopersService {
