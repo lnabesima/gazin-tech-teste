@@ -1,56 +1,61 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from '@prisma/client';
 import * as process from 'node:process';
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 
-async function main(){
-  console.log('Seeding basic data into the database...')
+async function main() {
+  console.log('Seeding basic data into the database...');
 
   const junior = await prisma.levels.upsert({
     where: {
-      nivel: 'Junior'
+      nivel: 'Junior',
     },
-    update:{},
+    update: {},
     create: {
-      nivel: 'Junior'
+      nivel: 'Junior',
     },
-  })
+  });
 
   const pleno = await prisma.levels.upsert({
     where: {
-      nivel: 'Pleno'
+      nivel: 'Pleno',
     },
-    update:{},
+    update: {},
     create: {
-      nivel: 'Pleno'
+      nivel: 'Pleno',
     },
-  })
+  });
 
   const senior = await prisma.levels.upsert({
     where: {
-      nivel: 'Senior'
+      nivel: 'Senior',
     },
-    update:{},
+    update: {},
     create: {
-      nivel: 'Senior'
+      nivel: 'Senior',
     },
-  })
+  });
 
   await prisma.developer.upsert({
     where: {
-      id: 1
+      id: 1,
     },
-    update:{},
+    update: {},
     create: {
       nome: 'Teste Testerson',
       sexo: 'M',
-      nivelId: junior.id,
       dataNascimento: new Date('1989-10-14'),
-      hobby: 'Nadar '
-    }
-  })
+      hobby: 'Nadar ',
+      nivel: {
+        connect: {
+          id: junior.id,
+          nivel: junior.nivel
+        }
+      },
+    },
+  });
 
-  console.log('Basic data seeded into the database')
+  console.log('Basic data seeded into the database');
 }
 
 main().catch(e => {
@@ -58,4 +63,4 @@ main().catch(e => {
   process.exit(1);
 }).finally(async () => {
   await prisma.$disconnect();
-})
+});
