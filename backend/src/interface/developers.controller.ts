@@ -9,7 +9,6 @@ import {
   ParseIntPipe,
   Patch,
   Post,
-  Put,
 } from '@nestjs/common';
 import { IDevelopersService } from '../domain/interfaces/developers.interface';
 import { CreateDeveloperDto } from '../application/dtos/createDeveloper.dto';

@@ -6,7 +6,6 @@ import { IDevelopersRepository } from '../../domain/repositories/developersRepos
 import { DeveloperDto } from '../dtos/developer.dto';
 import { RepositoryToServiceDeveloperMapper } from '../mapper/repositoryToServiceDeveloper.mapper';
 import { UpdateDeveloperDto } from '../dtos/updateDeveloperDto';
-import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class DevelopersService implements IDevelopersService {

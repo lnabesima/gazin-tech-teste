@@ -1,4 +1,3 @@
-import { Developer } from "../models/developers.model";
 import { CreateDeveloperDto } from '../../application/dtos/createDeveloper.dto';
 import { DeveloperDto } from '../../application/dtos/developer.dto';
 import { UpdateDeveloperDto } from '../../application/dtos/updateDeveloperDto';

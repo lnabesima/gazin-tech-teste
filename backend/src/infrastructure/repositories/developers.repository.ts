@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { IDevelopersRepository } from '../../domain/repositories/developersRepository.interface';
 import { PrismaService } from '../prisma/prisma.service';
-import { Prisma, Developer } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import {
   RepositoryToServiceDeveloperDto
 } from '../../application/dtos/repositoryToServiceDeveloper.dto';

@@ -1,4 +1,4 @@
-import { Prisma, Developer } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { RepositoryToServiceDeveloperDto } from 'src/application/dtos/repositoryToServiceDeveloper.dto';
 import { UpdateDeveloperDto } from '../../application/dtos/updateDeveloperDto';
 
