@@ -29,6 +29,10 @@ export class DevelopersService implements IDevelopersService {
     try {
       const developerArray = await this.developersRepository.getAll();
 
+      if (developerArray.length === 0) {
+        throw new NotFoundException('There was no entries.');
+      }
+
       return developerArray.map(dev => RepositoryToServiceDeveloperMapper.toDeveloperDto(dev));
     } catch (error) {
       handleError(error, 'developer');
