@@ -49,5 +49,8 @@ export class DevelopersController {
   }
 
   @Delete(':id')
-  deleteDeveloper(@Param('id', new ParseIntPipe()) id: number) {}
+  @HttpCode(204)
+  async deleteDeveloper(@Param('id', new ParseIntPipe()) id: number) {
+    return await this.developersService.deleteDeveloper(id);
+  }
 }

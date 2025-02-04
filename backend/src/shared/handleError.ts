@@ -7,9 +7,13 @@ import {
 export function handleError(error: unknown, type: string): never {
   const normalizedType = type.toLowerCase();
 
-  if (error instanceof HttpException && error.getStatus() === 400) {
-    throw error; //this is too hacky, but will have to do for now
+  // if (error instanceof HttpException && error.getStatus() === 400) {
+  //   throw error; //this is too hacky, but will have to do for now
+  // }
+  if (error instanceof HttpException) {
+    throw error;
   }
+
 
   if (error instanceof PrismaClientKnownRequestError) {
     if (error.code === 'P2025') { //this means not found

@@ -67,6 +67,16 @@ export class DevelopersService implements IDevelopersService {
   }
 
   async deleteDeveloper(id: number): Promise<void> {
-    throw new Error('Method not implemented.');
+    try {
+      const success = await this.developersRepository.delete(id);
+
+      if (!success) {
+        throw new NotFoundException('There was no entries with that id.');
+      }
+
+
+    } catch (e) {
+      handleError(e, 'developer');
+    }
   }
 }
