@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
-import { AtLeastOneField } from '../../shared/validators/atLeastOneField.constraint';
+// import { AtLeastOneField } from '../../shared/validators/atLeastOneField.constraint';
 
 export class UpdateLevelDto {
   @IsOptional()

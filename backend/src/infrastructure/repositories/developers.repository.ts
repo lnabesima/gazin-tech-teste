@@ -12,8 +12,12 @@ export class DevelopersRepository implements IDevelopersRepository {
     private readonly prisma: PrismaService,
   ) {}
 
-  async getAll(): Promise<Developer[]> {
-    return this.prisma.developer.findMany();
+  async getAll(): Promise<RepositoryToServiceDeveloperDto[]> {
+    return this.prisma.developer.findMany({
+      include: {
+        nivel: true
+      }
+    });
   }
 
   async getById(id: number): Promise<RepositoryToServiceDeveloperDto | null> {
@@ -36,10 +40,13 @@ export class DevelopersRepository implements IDevelopersRepository {
     });
   }
 
-  async update(id: number, developerData: Prisma.DeveloperUpdateInput): Promise<Developer> {
+  async update(id: number, developerData: Prisma.DeveloperUpdateInput): Promise<RepositoryToServiceDeveloperDto> {
     return this.prisma.developer.update({
       where: { id },
       data: developerData,
+      include: {
+        nivel: true
+      }
     });
   }
 

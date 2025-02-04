@@ -1,14 +1,11 @@
-import { Developer } from '@prisma/client';
 import { IDevelopersService } from '../../domain/interfaces/developers.interface';
 import { CreateDeveloperDto } from '../dtos/createDeveloper.dto';
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { handleError } from '../../shared/handleError';
 import { IDevelopersRepository } from '../../domain/repositories/developersRepository.interface';
 import { DeveloperDto } from '../dtos/developer.dto';
-import {
-  RepositoryToServiceDeveloperMapper,
-} from '../mapper/repositoryToServiceDeveloper.mapper';
-import { RepositoryToServiceDeveloperDto } from '../dtos/repositoryToServiceDeveloper.dto';
+import { RepositoryToServiceDeveloperMapper } from '../mapper/repositoryToServiceDeveloper.mapper';
+import { EditDeveloperDto } from '../dtos/editDeveloper.dto';
 
 @Injectable()
 export class DevelopersService implements IDevelopersService {
@@ -28,9 +25,11 @@ export class DevelopersService implements IDevelopersService {
     }
   }
 
-  getDevelopers(): Promise<Developer[]> {
+  async getDevelopers(): Promise<DeveloperDto[]> {
     try {
-      return this.developersRepository.getAll();
+      const developerArray = await this.developersRepository.getAll();
+
+      return developerArray.map(dev => RepositoryToServiceDeveloperMapper.toDeveloperDto(dev));
     } catch (error) {
       handleError(error, 'developer');
     }
@@ -41,25 +40,38 @@ export class DevelopersService implements IDevelopersService {
       const developer = await this.developersRepository.getById(id);
 
       if (developer === null) {
-        throw new NotFoundException("There was no entries with that id.")
+        throw new NotFoundException('There was no entries with that id.');
       }
 
-        return RepositoryToServiceDeveloperMapper.toDeveloperDto(developer);
+      return RepositoryToServiceDeveloperMapper.toDeveloperDto(developer);
 
-    } catch(error){
+    } catch (error) {
       handleError(error, 'developer');
     }
   }
 
-  editDeveloper(id: number, developer: Developer): Promise<Developer> {
-    throw new Error('Method not implemented.');
+  async editDeveloper(id: number, developer: EditDeveloperDto): Promise<DeveloperDto> {
+    try {
+      const editedDeveloper = await this.developersRepository.update(id, developer);
+
+      if (editedDeveloper === null) {
+        throw new NotFoundException('There was no entries with that id.');
+      }
+
+      return RepositoryToServiceDeveloperMapper.toDeveloperDto(editedDeveloper);
+    }catch (e) {
+      handleError(e, 'developer');
+    }
+
   }
 
-  updateDeveloper(id: number, developer: Developer): Promise<Developer> {
-    throw new Error('Method not implemented.');
+  async updateDeveloper(id: number, developer: CreateDeveloperDto): Promise<DeveloperDto> {
+    const dev = new DeveloperDto();
+
+    return dev;
   }
 
-  deleteDeveloper(id: number): Promise<void> {
+  async deleteDeveloper(id: number): Promise<void> {
     throw new Error('Method not implemented.');
   }
 }
