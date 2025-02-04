@@ -15,7 +15,7 @@ import { CreateDeveloperDto } from '../application/dtos/createDeveloper.dto';
 import { DeveloperDto } from '../application/dtos/developer.dto';
 import { UpdateDeveloperDto } from '../application/dtos/updateDeveloperDto';
 
-@Controller('developers')
+@Controller('desenvolvedores')
 export class DevelopersController {
   constructor(
     @Inject('IDevelopersService')

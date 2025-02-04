@@ -12,7 +12,7 @@ import {
 import { ILevelsService } from '../domain/interfaces/levels.interface';
 import { UpdateLevelDto } from '../application/dtos/updateLevel.dto';
 
-@Controller('levels')
+@Controller('niveis')
 export class LevelsController {
   constructor(
     @Inject('ILevelsService')
