@@ -6,6 +6,16 @@ meta {
 
 post {
   url: http://localhost:3000/api/v1/developers
-  body: none
+  body: json
   auth: none
+}
+
+body:json {
+  {
+    "nome": "Testarella the 9th",
+    "sexo": "F",
+    "dataNascimento": "1989-10-14",
+    "hobby": "Assistir TV",
+    "nivelId": 4
+  }
 }
