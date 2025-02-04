@@ -47,7 +47,7 @@ export class DevelopersService implements IDevelopersService {
         throw new NotFoundException('There was no entries with that id.');
       }
 
-      return RepositoryToServiceDeveloperMapper.toDeveloperDto(developer);
+      return RepositoryToServiceDeveloperMapper.toDeveloperDto(developer!);
 
     } catch (error) {
       handleError(error, 'developer');
@@ -67,12 +67,7 @@ export class DevelopersService implements IDevelopersService {
 
   async deleteDeveloper(id: number): Promise<void> {
     try {
-      const success = await this.developersRepository.delete(id);
-
-      if (!success) {
-        throw new NotFoundException('There was no entries with that id.');
-      }
-
+      await this.developersRepository.delete(id);
     } catch (e) {
       handleError(e, 'developer');
     }

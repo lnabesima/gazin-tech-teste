@@ -3,7 +3,7 @@ import { IDevelopersRepository } from '../../domain/repositories/developersRepos
 import { PrismaService } from '../prisma/prisma.service';
 import { Prisma } from '@prisma/client';
 import {
-  RepositoryToServiceDeveloperDto
+  RepositoryToServiceDeveloperDto,
 } from '../../application/dtos/repositoryToServiceDeveloper.dto';
 
 @Injectable()
@@ -15,8 +15,8 @@ export class DevelopersRepository implements IDevelopersRepository {
   async getAll(): Promise<RepositoryToServiceDeveloperDto[]> {
     return this.prisma.developer.findMany({
       include: {
-        nivel: true
-      }
+        nivel: true,
+      },
     });
   }
 
@@ -24,19 +24,19 @@ export class DevelopersRepository implements IDevelopersRepository {
     return this.prisma.developer.findUnique({
       where: { id },
       include: {
-        nivel: true
-      }
+        nivel: true,
+      },
     });
   }
 
   async create(developerData: Prisma.DeveloperUncheckedCreateInput): Promise<RepositoryToServiceDeveloperDto> {
     return this.prisma.developer.create({
       data: {
-        ...developerData
+        ...developerData,
       },
       include: {
-        nivel: true
-      }
+        nivel: true,
+      },
     });
   }
 
@@ -45,22 +45,14 @@ export class DevelopersRepository implements IDevelopersRepository {
       where: { id },
       data: developerData,
       include: {
-        nivel: true
-      }
+        nivel: true,
+      },
     });
   }
 
-  async delete(id: number): Promise<boolean> {
-    try {
-      await this.prisma.developer.delete({
-        where: { id },
-      });
-      return true;
-    } catch (e) {
-      if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2025') { //this means not found
-        return false;
-      }
-      throw e;
-    }
+  async delete(id: number): Promise<void> {
+    await this.prisma.developer.delete({
+      where: { id },
+    });
   }
 }

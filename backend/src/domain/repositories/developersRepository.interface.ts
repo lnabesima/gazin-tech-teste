@@ -7,5 +7,5 @@ export interface IDevelopersRepository {
   getById(id: number): Promise<RepositoryToServiceDeveloperDto | null>;
   create(developer: Prisma.DeveloperUncheckedCreateInput): Promise<RepositoryToServiceDeveloperDto>;
   update(id: number, developer: UpdateDeveloperDto): Promise<RepositoryToServiceDeveloperDto>;
-  delete(id: number): Promise<boolean>;
+  delete(id: number): Promise<void>;
 }
