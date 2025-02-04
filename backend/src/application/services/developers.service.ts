@@ -5,7 +5,8 @@ import { handleError } from '../../shared/handleError';
 import { IDevelopersRepository } from '../../domain/repositories/developersRepository.interface';
 import { DeveloperDto } from '../dtos/developer.dto';
 import { RepositoryToServiceDeveloperMapper } from '../mapper/repositoryToServiceDeveloper.mapper';
-import { EditDeveloperDto } from '../dtos/editDeveloper.dto';
+import { UpdateDeveloperDto } from '../dtos/updateDeveloperDto';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class DevelopersService implements IDevelopersService {
@@ -50,7 +51,7 @@ export class DevelopersService implements IDevelopersService {
     }
   }
 
-  async editDeveloper(id: number, developer: EditDeveloperDto): Promise<DeveloperDto> {
+  async updateDeveloper(id: number, developer: UpdateDeveloperDto): Promise<DeveloperDto> {
     try {
       const editedDeveloper = await this.developersRepository.update(id, developer);
 
@@ -59,16 +60,10 @@ export class DevelopersService implements IDevelopersService {
       }
 
       return RepositoryToServiceDeveloperMapper.toDeveloperDto(editedDeveloper);
-    }catch (e) {
+    } catch (e) {
       handleError(e, 'developer');
     }
 
-  }
-
-  async updateDeveloper(id: number, developer: CreateDeveloperDto): Promise<DeveloperDto> {
-    const dev = new DeveloperDto();
-
-    return dev;
   }
 
   async deleteDeveloper(id: number): Promise<void> {

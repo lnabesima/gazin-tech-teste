@@ -14,7 +14,7 @@ import {
 import { IDevelopersService } from '../domain/interfaces/developers.interface';
 import { CreateDeveloperDto } from '../application/dtos/createDeveloper.dto';
 import { DeveloperDto } from '../application/dtos/developer.dto';
-import { EditDeveloperDto } from '../application/dtos/editDeveloper.dto';
+import { UpdateDeveloperDto } from '../application/dtos/updateDeveloperDto';
 
 @Controller('developers')
 export class DevelopersController {
@@ -42,13 +42,11 @@ export class DevelopersController {
   }
 
   @Patch(':id')
-  async editDeveloper(@Param('id', new ParseIntPipe()) id: number,
-    @Body() bodyRequest: EditDeveloperDto) {
-    return await this.developersService.editDeveloper(id, bodyRequest)
+  async updateDeveloper(
+    @Param('id', new ParseIntPipe()) id: number,
+    @Body() bodyRequest: UpdateDeveloperDto) {
+    return await this.developersService.updateDeveloper(id, bodyRequest);
   }
-
-  @Put(':id')
-  updateDeveloper(@Param('id', new ParseIntPipe()) id: number) {}
 
   @Delete(':id')
   deleteDeveloper(@Param('id', new ParseIntPipe()) id: number) {}

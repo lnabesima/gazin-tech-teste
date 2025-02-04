@@ -1,13 +1,13 @@
 import { IsDate, IsInt, IsOptional, IsString } from 'class-validator';
 import {
   RequiresAtLeastOneProperty,
-  RequiresAtLeastOnePropertyConstraint,
 } from '../../shared/validators/requiresAtLeastOneProperty.decorator';
 
 @RequiresAtLeastOneProperty({
   message: 'At least one property must be provided for update.',
 })
-export class EditDeveloperDto {
+export class UpdateDeveloperDto
+{
   @IsOptional()
   @IsInt()
   nivelId?: number;

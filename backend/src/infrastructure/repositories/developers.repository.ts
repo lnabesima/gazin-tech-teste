@@ -40,7 +40,7 @@ export class DevelopersRepository implements IDevelopersRepository {
     });
   }
 
-  async update(id: number, developerData: Prisma.DeveloperUpdateInput): Promise<RepositoryToServiceDeveloperDto> {
+  async update(id: number, developerData: Prisma.DeveloperUncheckedUpdateInput): Promise<RepositoryToServiceDeveloperDto> {
     return this.prisma.developer.update({
       where: { id },
       data: developerData,
