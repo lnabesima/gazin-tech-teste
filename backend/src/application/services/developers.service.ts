@@ -54,10 +54,6 @@ export class DevelopersService implements IDevelopersService {
     try {
       const editedDeveloper = await this.developersRepository.update(id, developer);
 
-      if (editedDeveloper === null) {
-        throw new NotFoundException('There was no entries with that id.');
-      }
-
       return RepositoryToServiceDeveloperMapper.toDeveloperDto(editedDeveloper);
     } catch (e) {
       handleError(e, 'developer');
@@ -72,7 +68,6 @@ export class DevelopersService implements IDevelopersService {
       if (!success) {
         throw new NotFoundException('There was no entries with that id.');
       }
-
 
     } catch (e) {
       handleError(e, 'developer');
