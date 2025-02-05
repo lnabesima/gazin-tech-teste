@@ -1,0 +1,21 @@
+meta {
+  name: Edit Developer
+  type: http
+  seq: 4
+}
+
+patch {
+  url: http://localhost:3000/api/v1/developers/:id
+  body: json
+  auth: none
+}
+
+params:path {
+  id: 5
+}
+
+body:json {
+  {
+    "nivelId": 3
+  }
+}
