@@ -4,9 +4,13 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle, TextField,
+  DialogTitle,
+  MenuItem,
+  TextField,
 } from '@mui/material';
 import { ModalProps, ModalValuesProps } from '../../../@types/Modal';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import Grid from '@mui/material/Grid2';
 
 export const OperationsModal = (props: ModalProps) => {
   const modalValues: ModalValuesProps = {
@@ -26,29 +30,62 @@ export const OperationsModal = (props: ModalProps) => {
   };
 
   return (
-    <Dialog open={props.openModal} fullWidth sx={{ maxWidth: 'lg', whiteSpace: 'pre-line' }} slotProps={{ paper: {
+    <Dialog open={true} fullWidth sx={{ maxWidth: 'lg', whiteSpace: 'pre-line' }} slotProps={{
+      paper: {
         component: 'form',
-        onSubmit: props.onSubmit
-      }}}>
+        onSubmit: props.onSubmit,
+      },
+    }}>
       <DialogTitle>{modalValues.title[props.action]}</DialogTitle>
       <DialogContent dividers>
-        <DialogContentText sx={{ mb:2 }}>
+        <DialogContentText sx={{ mb: 2 }}>
           {modalValues.content[props.action]}
         </DialogContentText>
         {
           props.action !== 'DELETE' ?
             props.type === 'levels' ?
-              <TextField id="levelName" name={'levelName'} label="Nome do nível" value={props.levelName}
-                       onChange={props.handleChangeLevelName} disabled={props.isPending} variant="outlined" size={'small'}
-                       error={!!props.error} helperText={props.error} fullWidth />
-              :null
+              <TextField id="levelName" name={'levelName'} label="Nome do nível"
+                         value={props.levelName}
+                         onChange={props.handleChangeLevelName} disabled={props.isPending}
+                         variant="outlined" size={'small'}
+                         error={!!props.error} helperText={props.error} fullWidth />
+              :
+              ( <>
+                <Grid container spacing={2}>
+                  <Grid size={12}>
+                    <TextField label={'Nome'} fullWidth />
+                  </Grid>
+                  <Grid size={4}>
+
+                    <TextField select fullWidth label={'Sexo'}>
+                      <MenuItem value={'M'}>Masculino</MenuItem>
+                      <MenuItem value={'F'}>Feminino</MenuItem>
+                    </TextField>
+                  </Grid>
+                  <Grid size={4}>
+                    <DatePicker />
+                  </Grid>
+                  <Grid size={4}>
+                    <TextField label={'Nível'} select fullWidth>
+                      <MenuItem value={1}>Junior</MenuItem>
+                    </TextField>
+                  </Grid>
+                  <Grid size={12}>
+                    <TextField label={'Hobby'} fullWidth />
+                  </Grid>
+                </Grid>
+
+              </> )
             : null
 
         }
       </DialogContent>
       <DialogActions>
-        <Button type="button" variant="contained" color="info" onClick={props.onClose}>Cancelar</Button>
-        <Button type="submit" variant="contained" color={`${props.action !== 'DELETE' ? "success" : "error"}`} loading={props.isPending}>Confirmar</Button>
+        <Button type="button" variant="contained" color="info"
+                onClick={props.onClose}>Cancelar</Button>
+        <Button type="submit" variant="contained"
+                color={`${props.action !== 'DELETE' ? 'success' : 'error'}`}
+                loading={props.isPending}>Confirmar</Button>
       </DialogActions>
     </Dialog>
   );
