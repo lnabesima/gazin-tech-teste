@@ -149,7 +149,7 @@ export default function LevelsPage() {
   //array to build the datagrid headers
 
   const levelsColumns: GridColDef[] = [// @ts-ignore
-    { field: 'id', headerName: 'ID', hide: true },
+    { field: 'id', headerName: 'ID' },
     {
       field: 'name', headerName: 'Nome do nível', flex: 1,
     },
@@ -180,7 +180,7 @@ export default function LevelsPage() {
         </Box>
 
         <Button type={'button'} variant={'contained'} color={'primary'}
-                onClick={() => handleOperation('POST')}>Abrir Modal</Button>
+                onClick={() => handleOperation('POST')}>Cadastrar nível</Button>
       </Stack>
 
 
