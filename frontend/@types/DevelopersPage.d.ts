@@ -27,3 +27,14 @@ export interface RenderDeveloper {
   level: string,
   hobby: string
 }
+
+export interface handleOperationProps{
+  selectedOperation: selectableOperations
+  developer: CreateDeveloper
+}
+
+export interface mutateDeveloperProps extends handleOperationProps {
+  developerId: number
+}
+
+export type selectableOperations = "POST" | "PATCH" | "DELETE"

@@ -5,8 +5,16 @@ import { BreadcrumbItem } from '../../../../@types/Header';
 import { CustomButton } from '@/components/ButtonLink';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { z } from 'zod';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { IncomingDeveloper, RenderDeveloper } from '../../../../@types/DevelopersPage';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  CreateDeveloper,
+  IncomingDeveloper,
+  mutateDeveloperProps,
+  RenderDeveloper,
+  selectableOperations,
+} from '../../../../@types/DevelopersPage';
+import { ChangeEvent, FormEvent, useState } from 'react';
+import { OperationsModal } from '@/components/Modal';
 
 const developerSchema = z.object({
   name: z.string().min(3, { message: 'O nome precisa ter ao menos três caracteres.' }),
@@ -17,6 +25,16 @@ const developerSchema = z.object({
 });
 
 export default function DevelopersPage() {
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [selectedOperation, setSelectedOperation] = useState<selectableOperations>('POST');
+  const [developer, setDeveloper] = useState<CreateDeveloper>({
+    name: '',
+    sex: 'M',
+    dateOfBirth: '',
+    levelId: 0,
+    hobby: '',
+  });
+  const [error, setError] = useState<string | null>(null);
 
   const fetchDevelopers = async () => {
     const res = await fetch('http://localhost:5001/api/v1/desenvolvedores');
@@ -26,21 +44,86 @@ export default function DevelopersPage() {
     return res.json();
   };
 
+  const mutateLevel = async ({
+    selectedOperation, developer, developerId,
+  }: mutateDeveloperProps) => {
+    const url = developerId ? `http://localhost:5001/api/v1/desenvolvedores/${developerId}` : 'http://localhost:5001/api/v1/desenvolvedores';
+
+    const res = await fetch(url, {
+      method: selectedOperation,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: selectedOperation !== 'DELETE' ? JSON.stringify(developer) : null,
+    });
+
+    if (!res.ok) {
+      throw new Error(
+        `Failed to ${selectedOperation === 'POST' ? 'create' : selectedOperation === 'PATCH' ? 'update' : 'delete'} developer`);
+    }
+    return res.status !== 204 ? res.json() : null;
+  };
+
   const queryClient = useQueryClient();
   const { data, error: fetchError, isLoading } = useQuery({
     queryKey: ['developers'],
     queryFn: fetchDevelopers,
   });
+  const { mutate, isPending, error: mutationError } = useMutation({
+    mutationFn: mutateLevel,
+    mutationKey: ['postDeveloper'],
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['developers'],
+      });
+      setError(null);
+      setOpenModal(false);
+      setDeveloper(prevState => ( {
+        name: '',
+        sex: 'M',
+        dateOfBirth: '',
+        levelId: 0,
+        hobby: '',
+      } ));
+    },
+    onError: (mutationError) => {
+      setError(mutationError.message || 'Failed to submit');
+    },
+  });
 
+  const handleDeveloperChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const field = e.target.name as keyof CreateDeveloper;
+    let value: string | number = e.target.value;
 
-  const mappedDevelopers:RenderDeveloper[] = data?.map((developer: IncomingDeveloper):RenderDeveloper => ({
-    id: developer.id,
-    name: developer.nome,
-    sex: developer.sexo,
-    age: developer.idade,
-    level: developer.nivel.nivel,
-    hobby: developer.hobby,
-  }))
+    if (field === 'levelId') {
+      value = Number(e.target.value);
+    }
+
+    setDeveloper((prevState) => ( {
+      ...prevState,
+      [field]: value,
+    } ));
+  };
+
+  const handleOpenCloseModal = () => {
+    setOpenModal(!openModal);
+  };
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    alert('yippee ki yay')
+    handleOpenCloseModal()
+  };
+
+  const mappedDevelopers: RenderDeveloper[] = data?.map(
+    (developer: IncomingDeveloper): RenderDeveloper => ( {
+      id: developer.id,
+      name: developer.nome,
+      sex: developer.sexo,
+      age: developer.idade,
+      level: developer.nivel.nivel,
+      hobby: developer.hobby,
+    } ));
 
   const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -74,15 +157,19 @@ export default function DevelopersPage() {
             <CustomButton target={'/niveis'} label={'Niveis'} />
           </Box>
 
-          <Button type={'button'} variant={'contained'} color={'primary'} onClick={() => {}}>Cadastrar
+          <Button type={'button'} variant={'contained'} color={'primary'} onClick={handleOpenCloseModal}>Cadastrar
             desenvolvedor</Button>
         </Stack>
 
-        <DataGrid columns={developersColumns} rows={mappedDevelopers} loading={isLoading} slotProps={{
-          loadingOverlay: {
-            variant: 'skeleton', noRowsVariant: 'skeleton',
-          },
-        }} />
+        <DataGrid columns={developersColumns} rows={mappedDevelopers} loading={isLoading}
+                  slotProps={{
+                    loadingOverlay: {
+                      variant: 'skeleton', noRowsVariant: 'skeleton',
+                    },
+                  }} />
+
+        <OperationsModal openModal={openModal} action={selectedOperation} type={'developers'} isPending={isPending}
+                         error={error} onSubmit={handleSubmit} onClose={handleOpenCloseModal} />
 
 
       </Container>
