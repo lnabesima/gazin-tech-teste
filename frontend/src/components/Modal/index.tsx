@@ -11,6 +11,7 @@ import {
 import { ModalProps, ModalValuesProps } from '../../../@types/Modal';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Grid from '@mui/material/Grid2';
+import dayjs from 'dayjs';
 
 export const OperationsModal = (props: ModalProps) => {
   const modalValues: ModalValuesProps = {
@@ -30,7 +31,7 @@ export const OperationsModal = (props: ModalProps) => {
   };
 
   return (
-    <Dialog open={true} fullWidth sx={{ maxWidth: 'lg', whiteSpace: 'pre-line' }} slotProps={{
+    <Dialog open={props.openModal} fullWidth sx={{ maxWidth: 'lg', whiteSpace: 'pre-line' }} slotProps={{
       paper: {
         component: 'form',
         onSubmit: props.onSubmit,
@@ -53,25 +54,29 @@ export const OperationsModal = (props: ModalProps) => {
               ( <>
                 <Grid container spacing={2}>
                   <Grid size={12}>
-                    <TextField label={'Nome'} fullWidth />
+                    <TextField label={'Nome'} fullWidth  id={"nome"} name={"nome"} value={props.developer?.nome || ''} onChange={props.handleChangeDeveloper}/>
                   </Grid>
                   <Grid size={4}>
 
-                    <TextField select fullWidth label={'Sexo'}>
+                    {/*TODO: Check the warning on the browser's console*/}
+                    <TextField select fullWidth value={props.developer?.sexo} id={"sexo"} name={"sexo"} onChange={props.handleChangeDeveloper} label={'Sexo'}>
                       <MenuItem value={'M'}>Masculino</MenuItem>
                       <MenuItem value={'F'}>Feminino</MenuItem>
                     </TextField>
                   </Grid>
                   <Grid size={4}>
-                    <DatePicker />
+                    <DatePicker value={props.developer?.dataNascimento ? dayjs(props.developer?.dataNascimento) : null} onChange={props.handleDateChange} />
                   </Grid>
                   <Grid size={4}>
-                    <TextField label={'Nível'} select fullWidth>
+                    <TextField label={'Nível'} id={"nivelId"} name={"nivelId"} value={props.developer?.nivelId} onChange={props.handleChangeDeveloper} select fullWidth>
+                      {/*TODO: map the values from the server here*/}
                       <MenuItem value={1}>Junior</MenuItem>
+                      <MenuItem value={2}>Pleno</MenuItem>
+                      <MenuItem value={3}>Sênior</MenuItem>
                     </TextField>
                   </Grid>
                   <Grid size={12}>
-                    <TextField label={'Hobby'} fullWidth />
+                    <TextField label={'Hobby'} id={"hobby"} name={"hobby"} value={props.developer?.hobby} onChange={props.handleChangeDeveloper} fullWidth />
                   </Grid>
                 </Grid>
 

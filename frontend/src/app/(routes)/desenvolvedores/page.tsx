@@ -15,11 +15,11 @@ import {
 } from '../../../../@types/DevelopersPage';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { OperationsModal } from '@/components/Modal';
+import { Dayjs } from 'dayjs';
 
 const developerSchema = z.object({
   name: z.string().min(3, { message: 'O nome precisa ter ao menos três caracteres.' }),
   sex: z.string().min(1).max(1).regex(/^[MF]$/, { message: 'Sexo precisa ser M ou F.' }),
-  age: z.number().int().min(18, { message: 'Idade precisa ser maior que 18 anos.' }),
   levelId: z.number().int().min(1, { message: 'Nível é um campo requerido.' }),
   hobby: z.string().min(1, { message: 'Hobby é um campo requerido.' }),
 });
@@ -28,10 +28,10 @@ export default function DevelopersPage() {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [selectedOperation, setSelectedOperation] = useState<selectableOperations>('POST');
   const [developer, setDeveloper] = useState<CreateDeveloper>({
-    name: '',
-    sex: 'M',
-    dateOfBirth: '',
-    levelId: 0,
+    nome: '',
+    sexo: 'M',
+    dataNascimento: '1989-10-14',
+    nivelId: 0,
     hobby: '',
   });
   const [error, setError] = useState<string | null>(null);
@@ -44,10 +44,12 @@ export default function DevelopersPage() {
     return res.json();
   };
 
-  const mutateLevel = async ({
-    selectedOperation, developer, developerId,
+  const mutateDeveloper = async ({
+    selectedOperation, developerId, developer,
   }: mutateDeveloperProps) => {
     const url = developerId ? `http://localhost:5001/api/v1/desenvolvedores/${developerId}` : 'http://localhost:5001/api/v1/desenvolvedores';
+
+
 
     const res = await fetch(url, {
       method: selectedOperation,
@@ -70,21 +72,22 @@ export default function DevelopersPage() {
     queryFn: fetchDevelopers,
   });
   const { mutate, isPending, error: mutationError } = useMutation({
-    mutationFn: mutateLevel,
+    mutationFn: mutateDeveloper,
     mutationKey: ['postDeveloper'],
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['developers'],
       });
       setError(null);
-      setOpenModal(false);
       setDeveloper(prevState => ( {
-        name: '',
-        sex: 'M',
-        dateOfBirth: '',
-        levelId: 0,
+        nome: '',
+        sexo: 'M',
+        dataNascimento: '',
+        nivelId: 0,
         hobby: '',
+
       } ));
+      setOpenModal(false);
     },
     onError: (mutationError) => {
       setError(mutationError.message || 'Failed to submit');
@@ -95,7 +98,7 @@ export default function DevelopersPage() {
     const field = e.target.name as keyof CreateDeveloper;
     let value: string | number = e.target.value;
 
-    if (field === 'levelId') {
+    if (field === 'nivelId') {
       value = Number(e.target.value);
     }
 
@@ -105,15 +108,50 @@ export default function DevelopersPage() {
     } ));
   };
 
+  console.log(developer);
+
+  const handleDateChange = (newDate: Dayjs | null) => {
+    setDeveloper((prevState) => ( {
+      ...prevState,
+      dataNascimento: newDate ? newDate.toISOString().split('T')[0] : '',
+    } ));
+  };
+
   const handleOpenCloseModal = () => {
     setOpenModal(!openModal);
   };
 
+  // const handleSubmit = ({
+  //   selectedOperation, developerId,
+  // }: handleOperationProps) => (e: FormEvent) => {
+  //   try {
+  //     e.preventDefault();
+  //     if (selectedOperation !== 'DELETE') {
+  //       developerSchema.parse(developer);
+  //     }
+  //     mutate({
+  //       selectedOperation,
+  //       developerId,
+  //       developer: selectedOperation !== 'DELETE' ? developer : undefined,
+  //     });
+  //   } catch (error) {
+  //     if (error instanceof z.ZodError) {
+  //       setError(error.errors[0].message);
+  //     } else {
+  //       setError('An error occurred');
+  //     }
+  //   }
+  // };
+
   const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    alert('yippee ki yay')
-    handleOpenCloseModal()
-  };
+    e.preventDefault()
+    try{
+      mutate({selectedOperation: "POST", developer: developer})
+    } catch (error){
+      setError( 'Failed to submit')
+    }
+  }
+
 
   const mappedDevelopers: RenderDeveloper[] = data?.map(
     (developer: IncomingDeveloper): RenderDeveloper => ( {
@@ -157,7 +195,8 @@ export default function DevelopersPage() {
             <CustomButton target={'/niveis'} label={'Niveis'} />
           </Box>
 
-          <Button type={'button'} variant={'contained'} color={'primary'} onClick={handleOpenCloseModal}>Cadastrar
+          <Button type={'button'} variant={'contained'} color={'primary'}
+                  onClick={handleOpenCloseModal}>Cadastrar
             desenvolvedor</Button>
         </Stack>
 
@@ -168,8 +207,12 @@ export default function DevelopersPage() {
                     },
                   }} />
 
-        <OperationsModal openModal={openModal} action={selectedOperation} type={'developers'} isPending={isPending}
-                         error={error} onSubmit={handleSubmit} onClose={handleOpenCloseModal} />
+        <OperationsModal openModal={openModal} action={selectedOperation} type={'developers'}
+                         isPending={isPending}
+                         error={error} onSubmit={handleSubmit} onClose={handleOpenCloseModal}
+                         developer={developer}
+                         handleChangeDeveloper={handleDeveloperChange}
+                         handleDateChange={handleDateChange} />
 
 
       </Container>

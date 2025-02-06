@@ -102,7 +102,6 @@ export default function LevelsPage() {
   const handleOperation = (selectedOperation: 'POST' | 'PUT' | 'DELETE', level?: LevelParam | undefined) => {
     if (selectedOperation !== 'POST' && level !== undefined){
       setSelectedLevel(level)
-      console.log(level)
       setLevelName(level.name)
     }
     setSelectedOperation(selectedOperation)
