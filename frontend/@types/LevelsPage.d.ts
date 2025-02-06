@@ -18,3 +18,8 @@ export interface mutateLevelProps extends BaseLevelProps {
 
 export type HandleSubmitProps = BaseLevelProps
 
+export interface modalOptionsProps {
+  open: boolean,
+  modalOperation: 'POST' | 'PUT' | 'PATCH' | 'DELETE',
+  domain: 'niveis' | 'desenvolvedores'
+}

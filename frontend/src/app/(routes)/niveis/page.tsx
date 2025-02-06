@@ -4,12 +4,7 @@ import {
   Box,
   Button,
   Container,
-  Dialog,
-  DialogActions,
-  DialogContentText,
-  DialogTitle,
   Stack,
-  TextField,
 } from '@mui/material';
 import { z } from 'zod';
 import { ChangeEvent, FormEvent, useState } from 'react';
@@ -19,16 +14,19 @@ import { CustomButton } from '@/components/ButtonLink';
 import { HeaderComponent } from '@/components/Header';
 import { BreadcrumbItem } from '../../../../@types/Header';
 import {
-  DialogBody,
-} from 'next/dist/client/components/react-dev-overlay/internal/components/Dialog';
-import { HandleSubmitProps, Level, LevelParam, mutateLevelProps } from '../../../../@types/LevelsPage';
+  HandleSubmitProps,
+  Level,
+  LevelParam,
+  mutateLevelProps,
+} from '../../../../@types/LevelsPage';
+import { OperationsModal } from '@/components/Modal';
 
 const levelNameSchema = z.string().min(3).max(100);
 
 export default function LevelsPage() {
   const [levelName, setLevelName] = useState<string>('');
-  const [selectedlevel, setSelectedLevel] = useState<LevelParam | undefined>(undefined);
-  const [selectedOperation, setSelectedOperation] = useState<'POST' | 'PUT' | 'DELETE' | undefined>(undefined)
+  const [selectedLevel, setSelectedLevel] = useState<LevelParam | undefined>(undefined);
+  const [selectedOperation, setSelectedOperation] = useState<'POST' | 'PUT' | 'DELETE'>('POST')
   const [error, setError] = useState<string | null>(null);
   const [openModal, setOpenModal] = useState<boolean>(false);
 
@@ -101,7 +99,7 @@ export default function LevelsPage() {
     setOpenModal(!openModal);
   };
 
-  const handleOperation = (selectedOperation: 'POST' | 'PUT' | 'DELETE' | undefined, level?: LevelParam | undefined) => {
+  const handleOperation = (selectedOperation: 'POST' | 'PUT' | 'DELETE', level?: LevelParam | undefined) => {
     if (selectedOperation !== 'POST' && level !== undefined){
       setSelectedLevel(level)
       console.log(level)
@@ -170,6 +168,7 @@ export default function LevelsPage() {
         </Stack> ),
     }];
 
+
   return ( <>
     <Container maxWidth={'lg'} sx={{ mt: 2 }}>
       <HeaderComponent title={'Níveis'} breadcrumbs={breadcrumbs} />
@@ -185,35 +184,7 @@ export default function LevelsPage() {
       </Stack>
 
 
-
-
-
-
-      <Dialog open={openModal} onClose={handleOpenCloseModal} slotProps={{
-        paper: {
-          component: 'form',
-          onSubmit: handleSubmit({ method: selectedOperation, levelId: selectedlevel?.id }),
-        },
-      }}>
-        <DialogTitle>
-          {selectedOperation === 'DELETE' ? 'Deletar nível' : selectedOperation === 'PUT' ? 'Editar nível' : 'Cadastrar nível'}
-        </DialogTitle>
-        <DialogBody>
-          <DialogContentText sx ={{whiteSpace: 'pre-line'}}>
-            {selectedOperation === 'DELETE' ? 'Delete o nível existente.\n⚠️ Essa ação é' +
-              ' irreversível! ⚠️' : selectedOperation === 'PUT' ? 'Edite o nível' +
-              ' existente' : 'Cadastrar um novo nível'}
-          </DialogContentText>
-          <TextField id="levelName" name={'levelName'} label="Nome do nível" value={levelName}
-                     onChange={handleChange} disabled={isPending} variant="outlined" size={'small'}
-                     error={!!error} helperText={error} />
-        </DialogBody>
-        <DialogActions>
-          <Button onClick={handleOpenCloseModal}>Fechar</Button>
-          <Button type={'submit'} variant={'contained'}
-                  loading={isPending}>{isPending ? 'Aguarde...' : 'Cadastrar'}</Button>
-        </DialogActions>
-      </Dialog>
+      <OperationsModal openModal={openModal} action={selectedOperation} type={"levels"} levelName={levelName} handleChangeLevelName={handleChange} isPending={isPending} error={error} onSubmit={handleSubmit({method: selectedOperation, levelId: selectedLevel?.id})} onClose={handleOpenCloseModal}/>
 
 
       <DataGrid columns={levelsColumns}
