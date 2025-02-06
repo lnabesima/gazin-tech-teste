@@ -1,0 +1,337 @@
+{
+  "info": {
+    "name": "Gazin Tech Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Developers",
+      "item": [
+        {
+          "name": "Create new developer",
+          "event": [],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": null,
+            "description": "",
+            "url": {
+              "raw": "http://localhost:5001/api/v1/desenvolvedores",
+              "protocol": "http",
+              "host": [
+                "localhost:5001"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "desenvolvedores"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Testarella the 1st\",\n  \"sexo\": \"F\",\n  \"dataNascimento\": \"1989-10-14\",\n  \"hobby\": \"Assistir TV\",\n  \"nivelId\": 3\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Delete a developer",
+          "event": [],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "auth": null,
+            "description": "",
+            "url": {
+              "raw": "http://localhost:5001/api/v1/desenvolvedores/:id",
+              "protocol": "http",
+              "host": [
+                "localhost:5001"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "desenvolvedores",
+                ":id"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "2"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Edit Developer",
+          "event": [],
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "auth": null,
+            "description": "",
+            "url": {
+              "raw": "http://localhost:5001/api/v1/desenvolvedores/:id",
+              "protocol": "http",
+              "host": [
+                "localhost:5001"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "desenvolvedores",
+                ":id"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "5"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nivelId\": 3\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Get All Developers",
+          "event": [],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": null,
+            "description": "",
+            "url": {
+              "raw": "http://localhost:5001/api/v1/desenvolvedores",
+              "protocol": "http",
+              "host": [
+                "localhost:5001"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "desenvolvedores"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Get Individual Developer",
+          "event": [],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": null,
+            "description": "",
+            "url": {
+              "raw": "http://localhost:5001/api/v1/desenvolvedores/:id",
+              "protocol": "http",
+              "host": [
+                "localhost:5001"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "desenvolvedores",
+                ":id"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "3"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Levels",
+      "item": [
+        {
+          "name": "Create level",
+          "event": [],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": null,
+            "description": "",
+            "url": {
+              "raw": "http://localhost:3000/api/v1/levels/",
+              "protocol": "http",
+              "host": [
+                "localhost:3000"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "levels",
+                ""
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nivel\": \"Especialista\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Delete Level",
+          "event": [],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "auth": null,
+            "description": "",
+            "url": {
+              "raw": "http://localhost:3000/api/v1/levels/:id",
+              "protocol": "http",
+              "host": [
+                "localhost:3000"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "levels",
+                ":id"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All",
+          "event": [],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": null,
+            "description": "",
+            "url": {
+              "raw": "http://localhost:5001/api/v1/niveis/",
+              "protocol": "http",
+              "host": [
+                "localhost:5001"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "niveis",
+                ""
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Get individual level",
+          "event": [],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": null,
+            "description": "",
+            "url": {
+              "raw": "http://localhost:3000/api/v1/levels/:id",
+              "protocol": "http",
+              "host": [
+                "localhost:3000"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "levels",
+                ":id"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "4"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update level",
+          "event": [],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "auth": null,
+            "description": "",
+            "url": {
+              "raw": "http://localhost:5001/api/v1/niveis/:id",
+              "protocol": "http",
+              "host": [
+                "localhost:5001"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "niveis",
+                ":id"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "5"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nivel\": \"novo nivel 22\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "bruno",
+      "event": []
+    }
+  ],
+  "variable": []
+}
