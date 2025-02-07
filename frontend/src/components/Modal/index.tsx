@@ -1,3 +1,4 @@
+'use client';
 import {
   Button,
   Dialog,
@@ -13,7 +14,39 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Grid from '@mui/material/Grid2';
 import dayjs from 'dayjs';
 
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
+import { Level } from '../../../@types/LevelsPage';
+
 export const OperationsModal = (props: ModalProps) => {
+  const [levels, setLevels] = useState<Level[]>([])
+
+  //TODO: move this logic to a dedicated file
+  const fetchLevels = async () => {
+    const response = await fetch('http://localhost:5001/api/v1/niveis');
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch levels');
+    }
+
+    return response.json();
+  };
+
+  const { data, isFetched } = useQuery({
+    queryKey: ['levels'], queryFn: fetchLevels
+
+  });
+
+  useEffect(() => {
+    if (isFetched){
+      console.log('data has been fetched')
+      setLevels(Array.isArray(data) ? data : [])
+    }
+  }, [data, isFetched]);
+
+
+
+
   const modalValues: ModalValuesProps = {
     title: {
       POST: `Crie um novo ${props.type === 'levels' ? 'nível' : 'desenvolvedor'}`,
@@ -69,10 +102,14 @@ export const OperationsModal = (props: ModalProps) => {
                   </Grid>
                   <Grid size={4}>
                     <TextField label={'Nível'} id={"nivelId"} name={"nivelId"} value={props.developer?.nivelId} onChange={props.handleChangeDeveloper} select fullWidth>
-                      {/*TODO: map the values from the server here*/}
-                      <MenuItem value={1}>Junior</MenuItem>
-                      <MenuItem value={2}>Pleno</MenuItem>
-                      <MenuItem value={3}>Sênior</MenuItem>
+
+
+                      {levels.map((level) => (
+                        <MenuItem key={level.id} value={level.id}>
+                          {level.nivel}
+                        </MenuItem>
+                      ))}
+
                     </TextField>
                   </Grid>
                   <Grid size={12}>
