@@ -45,7 +45,7 @@ export default function LevelsPage() {
   };
 
   const mutateLevel = async({method, levelId, levelName}: mutateLevelProps) => {
-    const url = levelId ? `http://localhost:5001/api/v1//niveis/${levelId}` : `http://localhost:5001/api/v1//niveis`;
+    const url = levelId ? `http://localhost:5001/api/v1/niveis/${levelId}` : `http://localhost:5001/api/v1/niveis`;
 
     const res = await fetch(url, {
       method,
