@@ -1,4 +1,4 @@
-FROM node:22-alpine AS builder
+FROM node:22 AS builder
 
 WORKDIR /frontend
 
@@ -10,7 +10,7 @@ COPY . .
 
 RUN npm run build
 
-FROM node:22-alpine AS production
+FROM node:22 AS production
 
 WORKDIR /frontend
 
@@ -23,6 +23,7 @@ COPY --from=builder /frontend/public ./public
 COPY --from=builder /frontend/package.json ./package.json
 
 ENV NODE_ENV=production
+ENV NEXT_PUBLIC_BACKEND_URL=http://localhost:5001/api/v1
 
 EXPOSE 3000
 

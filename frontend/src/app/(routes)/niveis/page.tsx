@@ -30,10 +30,12 @@ export default function LevelsPage() {
   const [error, setError] = useState<string | null>(null);
   const [openModal, setOpenModal] = useState<boolean>(false);
 
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
   //lower level fetcher functions
 
   const fetchLevels = async () => {
-    const response = await fetch('http://localhost:5001/api/v1/niveis');
+    const response = await fetch(`${API_BASE_URL}/niveis`);
 
     if (!response.ok) {
       throw new Error('Failed to fetch levels');
@@ -43,7 +45,7 @@ export default function LevelsPage() {
   };
 
   const mutateLevel = async({method, levelId, levelName}: mutateLevelProps) => {
-    const url = levelId ? `http://localhost:5001/api/v1/niveis/${levelId}` : 'http://localhost:5001/api/v1/niveis';
+    const url = levelId ? `${API_BASE_URL}/niveis/${levelId}` : `${API_BASE_URL}/niveis`;
 
     const res = await fetch(url, {
       method,
@@ -102,7 +104,6 @@ export default function LevelsPage() {
   const handleOperation = (selectedOperation: 'POST' | 'PUT' | 'DELETE', level?: LevelParam | undefined) => {
     if (selectedOperation !== 'POST' && level !== undefined){
       setSelectedLevel(level)
-      console.log(level)
       setLevelName(level.name)
     }
     setSelectedOperation(selectedOperation)
@@ -149,7 +150,7 @@ export default function LevelsPage() {
   //array to build the datagrid headers
 
   const levelsColumns: GridColDef[] = [// @ts-ignore
-    { field: 'id', headerName: 'ID', hide: true },
+    { field: 'id', headerName: 'ID' },
     {
       field: 'name', headerName: 'Nome do nível', flex: 1,
     },
@@ -180,7 +181,7 @@ export default function LevelsPage() {
         </Box>
 
         <Button type={'button'} variant={'contained'} color={'primary'}
-                onClick={() => handleOperation('POST')}>Abrir Modal</Button>
+                onClick={() => handleOperation('POST')}>Cadastrar nível</Button>
       </Stack>
 
 
