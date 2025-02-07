@@ -12,11 +12,11 @@ export interface IncomingDeveloper {
 }
 
 export interface CreateDeveloper{
-  name: string,
-  sex: 'M' | 'F',
-  dateOfBirth: string,
+  nome: string,
+  sexo: 'M' | 'F',
+  dataNascimento: string,
   hobby: string,
-  levelId: number,
+  nivelId: number,
 }
 
 export interface RenderDeveloper {
@@ -27,3 +27,15 @@ export interface RenderDeveloper {
   level: string,
   hobby: string
 }
+
+export interface handleOperationProps{
+  selectedOperation: selectableOperations
+  developerId?: number
+
+}
+
+export interface mutateDeveloperProps extends handleOperationProps {
+  developer?: CreateDeveloper
+}
+
+export type selectableOperations = "POST" | "PATCH" | "DELETE"
