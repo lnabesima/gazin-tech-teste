@@ -21,10 +21,9 @@ import { Level } from '../../../@types/LevelsPage';
 export const OperationsModal = (props: ModalProps) => {
   const [levels, setLevels] = useState<Level[]>([])
 
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
   //TODO: move this logic to a dedicated file
   const fetchLevels = async () => {
-    const response = await fetch(`${API_BASE_URL}/niveis`);
+    const response = await fetch(`http://localhost:5001/api/v1/niveis`);
 
     if (!response.ok) {
       throw new Error('Failed to fetch levels');
