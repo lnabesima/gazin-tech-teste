@@ -37,8 +37,10 @@ export default function DevelopersPage() {
   });
   const [error, setError] = useState<string | null>(null);
 
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
   const fetchDevelopers = async () => {
-    const res = await fetch('http://localhost:5001/api/v1/desenvolvedores');
+    const res = await fetch(`${API_BASE_URL}/desenvolvedores`);
     if (!res.ok) {
       throw new Error('Failed to fetch developers');
     }
@@ -48,7 +50,7 @@ export default function DevelopersPage() {
   const mutateDeveloper = async ({
     selectedOperation, developerId, developer,
   }: mutateDeveloperProps) => {
-    const url = developerId ? `http://localhost:5001/api/v1/desenvolvedores/${developerId}` : 'http://localhost:5001/api/v1/desenvolvedores';
+    const url = developerId ? `${API_BASE_URL}/desenvolvedores/${developerId}` : `${API_BASE_URL}/desenvolvedores`;
 
     const res = await fetch(url, {
       method: selectedOperation,
@@ -118,7 +120,6 @@ export default function DevelopersPage() {
     } ));
   };
 
-  console.log(developer);
 
   const handleDateChange = (newDate: Dayjs | null) => {
     setDeveloper((prevState) => ( {
