@@ -3,7 +3,7 @@ import { Box, Button, Container, Stack } from '@mui/material';
 import { HeaderComponent } from '@/components/Header';
 import { BreadcrumbItem } from '../../../../@types/Header';
 import { CustomButton } from '@/components/ButtonLink';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { z } from 'zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
@@ -27,6 +27,7 @@ const developerSchema = z.object({
 export default function DevelopersPage() {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [selectedOperation, setSelectedOperation] = useState<selectableOperations>('POST');
+  const [developerId, setDeveloperId] = useState<number | undefined>(undefined);
   const [developer, setDeveloper] = useState<CreateDeveloper>({
     nome: '',
     sexo: 'M',
@@ -48,8 +49,6 @@ export default function DevelopersPage() {
     selectedOperation, developerId, developer,
   }: mutateDeveloperProps) => {
     const url = developerId ? `http://localhost:5001/api/v1/desenvolvedores/${developerId}` : 'http://localhost:5001/api/v1/desenvolvedores';
-
-
 
     const res = await fetch(url, {
       method: selectedOperation,
@@ -80,6 +79,7 @@ export default function DevelopersPage() {
       });
       setError(null);
       setDeveloper(prevState => ( {
+        ...prevState,
         nome: '',
         sexo: 'M',
         dataNascimento: '',
@@ -93,6 +93,16 @@ export default function DevelopersPage() {
       setError(mutationError.message || 'Failed to submit');
     },
   });
+
+  const mappedDevelopers: RenderDeveloper[] = data?.map(
+    (developer: IncomingDeveloper): RenderDeveloper => ( {
+      id: developer.id,
+      name: developer.nome,
+      sex: developer.sexo,
+      age: developer.idade,
+      level: developer.nivel.nivel,
+      hobby: developer.hobby,
+    } ));
 
   const handleDeveloperChange = (e: ChangeEvent<HTMLInputElement>) => {
     const field = e.target.name as keyof CreateDeveloper;
@@ -121,47 +131,36 @@ export default function DevelopersPage() {
     setOpenModal(!openModal);
   };
 
-  // const handleSubmit = ({
-  //   selectedOperation, developerId,
-  // }: handleOperationProps) => (e: FormEvent) => {
-  //   try {
-  //     e.preventDefault();
-  //     if (selectedOperation !== 'DELETE') {
-  //       developerSchema.parse(developer);
-  //     }
-  //     mutate({
-  //       selectedOperation,
-  //       developerId,
-  //       developer: selectedOperation !== 'DELETE' ? developer : undefined,
-  //     });
-  //   } catch (error) {
-  //     if (error instanceof z.ZodError) {
-  //       setError(error.errors[0].message);
-  //     } else {
-  //       setError('An error occurred');
-  //     }
-  //   }
-  // };
 
   const handleSubmit = (e: FormEvent) => {
-    e.preventDefault()
-    try{
-      mutate({selectedOperation: "POST", developer: developer})
-    } catch (error){
-      setError( 'Failed to submit')
+    e.preventDefault();
+    try {
+      mutate({ selectedOperation: selectedOperation, developer: developer, developerId: developerId });
+    } catch (error) {
+      setError('Failed to submit');
     }
-  }
+  };
 
+  const handleOperation = (method: "POST" | "PATCH" | "DELETE", developerId: number) => {
+    if (method === 'PATCH') {
+      const filteredDeveloper: IncomingDeveloper = data.find(
+        (developer: IncomingDeveloper) => developer.id === developerId);
 
-  const mappedDevelopers: RenderDeveloper[] = data?.map(
-    (developer: IncomingDeveloper): RenderDeveloper => ( {
-      id: developer.id,
-      name: developer.nome,
-      sex: developer.sexo,
-      age: developer.idade,
-      level: developer.nivel.nivel,
-      hobby: developer.hobby,
-    } ));
+      setDeveloper((prevState) => (
+        {
+          ...prevState,
+          nome: filteredDeveloper.nome,
+          sexo: filteredDeveloper.sexo,
+          dataNascimento: filteredDeveloper.data_nascimento,
+          nivelId: filteredDeveloper.nivel.id,
+          hobby: filteredDeveloper.hobby,
+        } ));
+    }
+
+    setOpenModal(true);
+    setSelectedOperation(method)
+    setDeveloperId(developerId)
+  };
 
   const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -178,12 +177,29 @@ export default function DevelopersPage() {
 
   const developersColumns: GridColDef[] = [
     { field: 'id', headerName: 'ID', flex: 0.5 },
-    { field: 'name', headerName: 'Nome do desenvolvedor', flex: 2 },
-    { field: 'sex', headerName: 'Sexo', flex: 1 },
-    { field: 'age', headerName: 'Idade', flex: 1 },
+    { field: 'name', headerName: 'Nome do desenvolvedor', flex: 1.5 },
+    { field: 'sex', headerName: 'Sexo', flex: 0.5 },
+    { field: 'age', headerName: 'Idade', flex: 0.5 },
     { field: 'level', headerName: 'Nível', flex: 1 },
     { field: 'hobby', headerName: 'Hobby', flex: 1 },
+    {
+      field: 'actionButtons', headerName: 'Ações', flex: 1, align: 'center',
+      renderCell: (params: GridRenderCellParams) => (
+        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 1, sm: 2 }}
+               alignItems={'center'} justifyContent={'center'}
+               sx={{ height: { xs: 'auto', sm: '100%' } }}>
+          <Button variant="contained" color="warning" size="small"
+                  onClick={() => handleOperation("PATCH",params.row.id)}>
+            Editar
+          </Button>
+          <Button variant="contained" color="error" size="small"
+                  onClick={() => handleOperation("DELETE", params.row.id)}>
+            Deletar
+          </Button>
+        </Stack> ),
+    },
   ];
+
   return (
     <>
       <Container maxWidth={'lg'} sx={{ mt: 2 }}>
