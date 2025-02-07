@@ -14,7 +14,7 @@ FROM node:22 AS production
 
 WORKDIR /frontend
 
-COPY package.json ./
+COPY package.json package-lock.json ./
 
 RUN npm install --omit=dev && npm cache clean --force
 

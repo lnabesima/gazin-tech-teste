@@ -2,7 +2,7 @@ FROM node:22-alpine AS builder
 
 WORKDIR /backend
 
-COPY package.json ./
+COPY package.json package-lock.json ./
 
 RUN npm install --omit=dev && npm cache clean --force
 
